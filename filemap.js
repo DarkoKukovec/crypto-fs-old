@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('lodash');
 
-module.exports = function(rootPath, fileMapName, every, crypto) {
+module.exports = function(rootPath, fileMapName, every, prefix, crypto) {
   var mapFilePath = path.normalize(rootPath + '/' + fileMapName);
   var map = {}, inverted = {};
   if (fs.existsSync(mapFilePath)) {
@@ -20,7 +20,6 @@ module.exports = function(rootPath, fileMapName, every, crypto) {
   }
 
   function getEncFile(filePath, folder) {
-    // console.log(filePath);
     var pathFragments = filePath.split('/');
     var folderPath = '';
     var rawFolderPath = '';
@@ -39,8 +38,7 @@ module.exports = function(rootPath, fileMapName, every, crypto) {
       }
     }
 
-    // console.log(path.normalize(folderPath + 'cfs_' + crypto.hash(filePath)));
-    return path.normalize(folderPath + 'cfs_' + crypto.hash(filePath));
+    return path.normalize(folderPath + prefix + crypto.hash(filePath));
   }
 
   function reverseGet(file) {

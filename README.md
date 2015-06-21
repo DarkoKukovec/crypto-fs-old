@@ -7,6 +7,7 @@ Wrapper around node fs module that encrypts the files on the fly
     var cfs = require('crypto-fs')({
       every: true, // Should the filemap be saved on every change
       algorithm: 'aes-256-ctr',
+      prefix: 'cfs_', // encrpted filename prefix. Can be false. Defaults to ``"cfs_"``
       password: '1234',
       root: './test/dest', // Root directory of the encrypted files
       filemap: 'filemap' // filename of the map file (saved in the root folder)

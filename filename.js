@@ -1,8 +1,8 @@
-module.exports = function(rootPath, crypto) {
+module.exports = function(rootPath, prefix, crypto) {
 
   function encrypt(filePath) {
     return filePath.split('/').map(function(name) {
-      return 'cfs_' + crypto.encrypt(name);
+      return prefix + crypto.encrypt(name);
     }).join('/');
   }
 

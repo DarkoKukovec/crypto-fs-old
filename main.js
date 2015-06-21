@@ -9,14 +9,15 @@ module.exports = function(options) {
 
   // root directory
   var rootPath = options.root || './';
+  var prefix = options.prefix === false ? '' : (options.prefix || 'cfs_');
 
   // filemap path
   var fileMap;
   if (options.filemap) {
     var fileMapFile = options.filemap;
-    fileMap = require('./filemap')(rootPath, fileMapFile, options.every, crypto);
+    fileMap = require('./filemap')(rootPath, fileMapFile, options.every, prefix, crypto);
   } else {
-    fileMap = require('./filename')(rootPath, crypto);
+    fileMap = require('./filename')(rootPath, prefix, crypto);
   }
 
   function getPath(file) {
