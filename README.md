@@ -15,6 +15,10 @@ Wrapper around node fs module that encrypts the files on the fly
 If every is set to false, file map should be saved with ``cfs.saveMap();``.
 Paths are always relative to the root folder.
 
+## Example
+
+``test.js`` file contains an example. To use it, create a test/src folder and put some files in it. Run ``node test`` and the result should be test/dest folder with encrypted files and filemap file and test/finish folder with the files decrypted again.
+
 ## Implemented functions
 
 * readFile
