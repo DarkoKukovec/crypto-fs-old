@@ -36,8 +36,6 @@ files.forEach(function(file) {
   cfs.writeFileSync(file, data);
 });
 
-cfs.saveMap();
-
 files.forEach(function(file) {
   var data2 = cfs.readFileSync(file);
   fs.writeFileSync('./test/finish/' + file, data2);

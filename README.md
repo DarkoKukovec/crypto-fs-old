@@ -15,6 +15,8 @@ Wrapper around node fs module that encrypts the files on the fly
 If every is set to false, file map should be saved with ``cfs.saveMap();``.
 Paths are always relative to the root folder.
 
+If filemap option is falsy, no filemap will be used. Instead, filenames will be encrypted with the same algorithm as the data. Advantage is that the filemap can't be corrupted and doesn't use any additional space. Disantvage is that the filename lenght isn't completly hidden.
+
 ## Example
 
 ``test.js`` file contains an example. To use it, create a test/src folder and put some files in it. Run ``node test`` and the result should be test/dest folder with encrypted files and filemap file and test/finish folder with the files decrypted again.

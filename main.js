@@ -11,8 +11,13 @@ module.exports = function(options) {
   var rootPath = options.root || './';
 
   // filemap path
-  var fileMapFile = options.filemap || 'filemap';
-  var fileMap = require('./filemap')(rootPath, fileMapFile, options.every, crypto);
+  var fileMap;
+  if (options.filemap) {
+    var fileMapFile = options.filemap;
+    fileMap = require('./filemap')(rootPath, fileMapFile, options.every, crypto);
+  } else {
+    fileMap = require('./filename')(rootPath, crypto);
+  }
 
   function getPath(file) {
     var name = fileMap.add(file);
@@ -135,7 +140,7 @@ module.exports = function(options) {
       return data.map(reverseFilenameMap(folder));
     },
 
-    saveMap: fileMap.save
+    saveMap: fileMap && fileMap.save
     // createReadStream
     // createWriteStream
     // ReadStream
