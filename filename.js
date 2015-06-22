@@ -1,4 +1,4 @@
-module.exports = function(rootPath, prefix, crypto) {
+module.exports = function(prefix, crypto) {
 
   function encrypt(filePath) {
     return filePath.split('/').map(function(name) {
@@ -13,8 +13,7 @@ module.exports = function(rootPath, prefix, crypto) {
   }
 
   return {
-    add: encrypt,
-    remove: function() {},
+    encrypt: encrypt,
     get: function(filePath) {
       if (['.', '..'].indexOf(filePath) === -1) {
         return encrypt(filePath);
@@ -22,6 +21,6 @@ module.exports = function(rootPath, prefix, crypto) {
         return filePath;
       }
     },
-    reverseGet: decrypt
+    decrypt: decrypt
   }
 };
