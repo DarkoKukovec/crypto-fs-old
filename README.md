@@ -5,18 +5,13 @@ Wrapper around node fs module that encrypts the files on the fly
 ## Usage
 
     var cfs = require('crypto-fs')({
-      every: true, // Should the filemap be saved on every change
       algorithm: 'aes-256-ctr',
-      prefix: 'cfs_', // encrpted filename prefix. Can be false. Defaults to ``"cfs_"``
+      prefix: '', // encrpted filename prefix.  Defaults to ``""``
       password: '1234',
       root: './test/dest', // Root directory of the encrypted files
-      filemap: 'filemap' // filename of the map file (saved in the root folder)
     });
 
-If every is set to false, file map should be saved with ``cfs.saveMap();``.
 Paths are always relative to the root folder.
-
-If filemap option is falsy, no filemap will be used. Instead, filenames will be encrypted with the same algorithm as the data. Advantage is that the filemap can't be corrupted and doesn't use any additional space. Disantvage is that the filename lenght isn't completly hidden.
 
 ## Example
 
@@ -35,3 +30,13 @@ If filemap option is falsy, no filemap will be used. Instead, filenames will be 
 * readdir
 
 ...and their Sync alternatives
+
+## extra functions
+
+* crypto
+  * filename
+    * encrypt - used for filename encryption
+    * decrypt - used for filename decryption
+  * crypto
+    * encryptBuffer - main encryption function
+    * decryptBuffer - main decryption function

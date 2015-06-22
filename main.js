@@ -12,133 +12,51 @@ module.exports = function(options) {
   var prefix = options.prefix || '';
 
   var filename = require('./filename')(prefix, crypto);
-
-  function getPath(file) {
-    var name = filename.encrypt(file);
-    return path.normalize(rootPath + '/' + name);
-  }
-
-  function asyncCb(cb, success) {
-    return function (err, data) {
-      if (err) cb(err, null);
-      else cb(err, success(data));
-    };
-  };
-
-  function reverseFilenameMap(folder) {
-    return function(fileName) {
-      var filePath = path.normalize(filename.encrypt(folder) + '/' + fileName);
-      var file = filename.decrypt(filePath);
-      return file.split('/').pop();
-    };
-  }
-
-  function readWrapper(fn, decrypt) {
-    return function(file) {
-      arguments[0] = getPath(file);
-      var data = fs[fn].apply(fs, arguments);
-      return decrypt crypto.decryptBuffer(data) ? : data;
-    }
-  }
-
-  function writeWrapper(fn) {
-    return function(file, data) {
-      arguments[0] = getPath(file);
-      arguments[1] = crypto.encryptBuffer(data);
-      return fs[fn].apply(fs, arguments);
-    }
-  }
+  var utils = require('./utils')(rootPath, filename, crypto);
 
   return Object.freeze({
-    readFileSync: function(file) {
-      var filePath = getPath(file);
-      var data = fs.readFileSync(filePath);
-      return crypto.decryptBuffer(data);
-    },
-    readFile: function(file, cb) {
-      var filePath = getPath(file);
-      fs.readFileSync(filePath, asyncCb(cb, function(data) {
-        return crypto.decryptBuffer(data);
-      }));
-    },
+    readFile: utils.readAsyncWrapper('readFile'),
+    readFileSync: utils.readSyncWrapper('readFileSync', true),
 
-    writeFileSync: function(file, data) {
-      var filePath = getPath(file);
-      data = crypto.encryptBuffer(data);
-      return fs.writeFileSync(filePath, data);
-    },
-    writeFile: function(file, data, cb) {
-      var filePath = getPath(file);
-      data = crypto.encryptBuffer(data);
-      fs.writeFileSync(filePath, data, cb);
-    },
+    writeFile: utils.writeWrapper('writeFile'),
+    writeFileSync: utils.writeWrapper('writeFileSync'),
 
-    stat: function(file, cb) {
-      var filePath = getPath(file);
-      fs.stat(filePath, cb);
-    },
-    statSync: function(file) {
-      var filePath = getPath(file);
-      return fs.statSync(filePath);
-    },
+    stat: utils.fsWrapper('stat'),
+    statSync: utils.fsWrapper('statSync'),
 
-    mkdir: function(folder, cb) {
-      var folderPath = getPath(folder);
-      fs.mkdir(folderPath, cb);
-    },
-    mkdirSync: function(folder) {
-      var folderPath = getPath(folder);
-      return fs.mkdirSync(folderPath);
-    },
+    mkdir: utils.fsWrapper('mkdir'),
+    mkdirSync: utils.fsWrapper('mkdirSync'),
 
-    rmdir: function(folder, cb) {
-      var folderPath = getPath(folder);
-      fs.rmdir(folderPath, cb);
-    },
-    rmdirSync: function(folder) {
-      var folderPath = getPath(folder);
-      return fs.rmdirSync(folderPath);
-    },
+    rmdir: utils.fsWrapper('rmdir'),
+    rmdirSync: utils.fsWrapper('rmdirSync'),
 
-    unlink: function(file, cb) {
-      var filePath = getPath(file);
-      fs.unlink(filePath, cb);
-    },
-    unlinkSync: function(file) {
-      var filePath = getPath(file);
-      return fs.unlinkSync(filePath);
-    },
+    unlink: utils.fsWrapper('unlink'),
+    unlinkSync: utils.fsWrapper('unlinkSync'),
 
-    exists: function(file, cb) {
-      var filePath = getPath(file);
-      fs.exists(filePath, cb);
-    },
-    existsSync: function(file) {
-      var filePath = getPath(file);
-      return fs.existsSync(filePath);
-    },
+    exists: utils.fsWrapper('exists'),
+    existsSync: utils.fsWrapper('existsSync'),
 
     rename: function(file, newFile, cb) {
-      var filePath = getPath(file);
-      var newFilePath = getPath(newFile);
+      var filePath = utils.getPath(file);
+      var newFilePath = utils.getPath(newFile);
       fs.rename(filePath, newFile, cb);
     },
     renameSync: function(file, newFile) {
-      var filePath = getPath(file);
-      var newFilePath = getPath(newFile);
+      var filePath = utils.getPath(file);
+      var newFilePath = utils.getPath(newFile);
       return fs.renameSync(filePath, newFile);
     },
 
     readdir: function(folder, cb) {
-      var folderPath = getPath(folder);
-      fs.readdir(folderPath, asyncCb(cb, function(data) {
-        return data.map(reverseFilenameMap(folder));
-      });
+      var folderPath = utils.getPath(folder);
+      fs.readdir(folderPath, utils.asyncCb(cb, function(data) {
+        return data.map(utils.reverseFilenameMap(folder));
+      }));
     },
     readdirSync: function(folder, cb) {
-      var folderPath = getPath(folder);
+      var folderPath = utils.getPath(folder);
       var data = fs.readdirSync(folderPath);
-      return data.map(reverseFilenameMap(folder));
+      return data.map(utils.reverseFilenameMap(folder));
     },
 
     // createReadStream
@@ -148,6 +66,7 @@ module.exports = function(options) {
 
     // Expose helper functions
     crypto: {
+      crypto: crypto,
       filename: filename
     }
   });
