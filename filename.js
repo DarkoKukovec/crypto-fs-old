@@ -10,7 +10,7 @@ module.exports = function(prefix, crypto) {
 
   function decrypt(filePath) {
     return filePath.split('/').map(function(name) {
-      return crypto.decrypt(new Buffer(name, 'hex')).toString();
+      return crypto.decryptBuffer(new Buffer(name.slice(prefix.length), 'hex')).toString();
     }).join('/');
   }
 
