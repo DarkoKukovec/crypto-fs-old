@@ -1,8 +1,7 @@
 var crypto = require('crypto');
 var buffer = require('buffer').Buffer;
 
-var cryptostream = require('./cryptostream');
-var DecryptStream = cryptostream.DecryptStream;
+var CryptoStream = require('./cryptostream');
 
 module.exports = function(options) {
   var cryptoObj = {
@@ -33,12 +32,11 @@ module.exports = function(options) {
       return dec;
     },
 
-    getDecryptStream: function(options, encoding) {
-      return new DecryptStream({
-        decipher: cryptoObj.getDecipher(options),
+    getDecryptStream: function(encoding, debug) {
+      return new CryptoStream({
         inputEncoding: 'binary',
         outputEncoding: encoding
-      });
+      }, cryptoObj.getDecipher(options), debug);
     }
   }
   return cryptoObj;

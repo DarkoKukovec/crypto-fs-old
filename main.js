@@ -62,11 +62,11 @@ module.exports = function(options) {
     createReadStream: function(file, fsOptions) {
       fsOptions = fsOptions || {};
       var filePath = utils.getPath(file);
-      var encoding = typeof(fsOptions.encoding) == 'string' ? fsOptions.encoding : 'utf8';
+      var encoding = typeof(fsOptions.encoding) == 'string' ? fsOptions.encoding : null;
       fsOptions.encoding = 'binary';
 
       var fstream = fs.createReadStream(filePath, fsOptions);
-      var cstream = crypto.getDecryptStream(encoding);
+      var cstream = crypto.getDecryptStream(encoding, file);
 
       return fstream.pipe(cstream);
     },
@@ -74,7 +74,7 @@ module.exports = function(options) {
     createWriteStream: function(file, fsOptions) {
       fsOptions = fsOptions || {};
       var filePath = utils.getPath(file);
-      var encoding = typeof(fsOptions.encoding) == 'string' ? fsOptions.encoding : 'utf8';
+      var encoding = typeof(fsOptions.encoding) == 'string' ? fsOptions.encoding : null;
       fsOptions.encoding = 'binary';
 
       var fstream = fs.createWriteStream(filePath, fsOptions);
@@ -95,7 +95,7 @@ module.exports = function(options) {
 
       return fstream;
     },
-    
+
     // ReadStream
     // rimraf
 

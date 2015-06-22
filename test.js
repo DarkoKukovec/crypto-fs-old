@@ -37,6 +37,7 @@ files.forEach(function(file) {
 });
 
 files.forEach(function(file) {
-  var data2 = cfs.readFileSync(file);
-  fs.writeFileSync('./test/finish/' + file, data2);
+  var srcFile = cfs.createReadStream(file);
+  var destFile = fs.createWriteStream('./test/finish/' + file);
+  srcFile.pipe(destFile);
 });
