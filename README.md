@@ -5,10 +5,11 @@ Wrapper around node fs module that encrypts the files on the fly
 ## Usage
 
     var cfs = require('crypto-fs')({
-      algorithm: 'aes-256-ctr',
-      prefix: '', // encrpted filename prefix.  Defaults to ``""``
-      password: '1234',
-      root: './test/dest', // Root directory of the encrypted files
+      algorithm: 'aes-256-ctr', // Any algorithm supported by node.js crypto module
+      prefix: '', // encrpted filename prefix, defaults to ''
+      password: '1234', // Please don't use '1234' or 'password' as your password ;)
+      root: './test/dest', // Root directory of the encrypted files, defaults to './' (current folder)
+      iv: null // If initialization vector is given, Cipheriv will be used
     });
 
 Paths are always relative to the root folder.
@@ -16,6 +17,15 @@ Paths are always relative to the root folder.
 ## Example
 
 ``test.js`` file contains an example. To use it, create a test/src folder and put some files in it. Run ``node test`` and the result should be test/dest folder with encrypted files and filemap file and test/finish folder with the files decrypted again.
+
+## What is hidden, and what is not?
+
+* Hidden
+  * File content
+  * Filename (but the filename lenght can be estimated)
+* Not hidden
+  * File size (but can be different by a few bytes, depending on the file and used algorithm)
+  * Folder structure (except for the file and folder names)
 
 ## Implemented functions
 
@@ -31,7 +41,7 @@ Paths are always relative to the root folder.
 
 ...and their Sync alternatives
 
-## Extra functions
+## Helper functions
 
 * crypto
   * filename
@@ -43,4 +53,4 @@ Paths are always relative to the root folder.
 
 ## Note
 
-* if the folder contains both encrypted and unencrypted files, readdir will break. This will be fixed in a future version.
+* If the folder contains both encrypted and unencrypted files, readdir will break. This will be fixed in a future version.

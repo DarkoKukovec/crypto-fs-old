@@ -4,7 +4,7 @@ var path = require('path');
 module.exports = function(options) {
   options = options || false;
 
-  // algorithm, password
+  // algorithm, password, iv
   var crypto = require('./crypto.js')(options);
 
   // root directory
