@@ -16,13 +16,6 @@ module.exports = function(prefix, crypto) {
 
   return {
     encrypt: encrypt,
-    get: function(filePath) {
-      if (['.', '..'].indexOf(filePath) === -1) {
-        return encrypt(filePath);
-      } else {
-        return filePath;
-      }
-    },
     decrypt: decrypt
   }
 };

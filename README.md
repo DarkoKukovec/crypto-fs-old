@@ -31,7 +31,7 @@ Paths are always relative to the root folder.
 
 ...and their Sync alternatives
 
-## extra functions
+## Extra functions
 
 * crypto
   * filename
@@ -40,3 +40,7 @@ Paths are always relative to the root folder.
   * crypto
     * encryptBuffer - main encryption function
     * decryptBuffer - main decryption function
+
+## Note
+
+* if the folder contains both encrypted and unencrypted files, readdir will break. This will be fixed in a future version.
