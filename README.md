@@ -41,6 +41,9 @@ Paths are always relative to the root folder.
 
 ...and their Sync alternatives
 
+* createReadStream
+* createWriteStream
+
 ## Helper functions
 
 * crypto
@@ -51,6 +54,10 @@ Paths are always relative to the root folder.
     * encryptBuffer - main encryption function
     * decryptBuffer - main decryption function
 
-## Note
+## Known issues
 
 * If the folder contains both encrypted and unencrypted files, readdir will break. This will be fixed in a future version.
+
+## Attribution
+
+* stream functionality based on [node-efs](https://github.com/kunklejr/node-efs)

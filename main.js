@@ -59,8 +59,43 @@ module.exports = function(options) {
       return data.map(utils.reverseFilenameMap(folder));
     },
 
-    // createReadStream
-    // createWriteStream
+    createReadStream: function(file, fsOptions) {
+      fsOptions = fsOptions || {};
+      var filePath = utils.getPath(file);
+      var encoding = typeof(fsOptions.encoding) == 'string' ? fsOptions.encoding : 'utf8';
+      fsOptions.encoding = 'binary';
+
+      var fstream = fs.createReadStream(filePath, fsOptions);
+      var cstream = crypto.getDecryptStream(encoding);
+
+      return fstream.pipe(cstream);
+    },
+
+    createWriteStream: function(file, fsOptions) {
+      fsOptions = fsOptions || {};
+      var filePath = utils.getPath(file);
+      var encoding = typeof(fsOptions.encoding) == 'string' ? fsOptions.encoding : 'utf8';
+      fsOptions.encoding = 'binary';
+
+      var fstream = fs.createWriteStream(filePath, fsOptions);
+      var cipher = crypto.getCipher(options);
+
+      fstream.cryptoWrite = fstream.write;
+      fstream.cryptoEnd = fstream.end;
+      fstream.write = function (data, encoding, fd) {
+        this.cryptoWrite(cipher.update(data, encoding, 'binary'), 'binary', fd);
+      };
+      fstream.end = function (data, encoding) {
+        if (data) {
+          this.cryptoWrite(cipher.update(data, encoding, 'binary'), 'binary');
+        }
+        this.cryptoWrite(cipher.final(), 'binary');
+        this.cryptoEnd();
+      };
+
+      return fstream;
+    },
+    
     // ReadStream
     // rimraf
 
