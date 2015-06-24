@@ -2,6 +2,10 @@
 
 Wrapper around node fs module that encrypts the files on the fly
 
+## Installation
+
+    npm install DarkoKukovec/crypto-fs
+
 ## Usage
 
     var cfs = require('crypto-fs')({
@@ -56,11 +60,13 @@ Paths are always relative to the root folder.
     * decryptBuffer - main decryption function
 
 ## Enhanced security
-Looking at many binary file formats, they always start with the same few bytes. If the same key is used to encrypt those files, the encrypted filles will still share the frist few bytes and therefore be more vulnerable to breaking the key.
+Looking at many binary file formats, they always start with the same few bytes. If the same key is used to encrypt those files, the encrypted files will still share the first few bytes and therefore be more vulnerable to breaking the key.
+
 In order to make it harder, in the enhanced security mode, every file will have an additional protection. When the file is encrypted, its original filename will be added to the pasword and therefore make the password unique to that file.
+
 Something similar is done with filenames (except for the files and folders in the root folder). Original name of the previous folders is added to the original password for extra security.
 
-### Downside
+### Downsides
 This mode can't be used in all cases for the following reasons:
   * Every manual rename will break the code and the files will be useless
   * When a file is renamed using crypto-fs, it has to be decoded and encoded back which isn't practical for bigger files
