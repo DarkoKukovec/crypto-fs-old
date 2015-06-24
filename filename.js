@@ -4,7 +4,7 @@ module.exports = function(prefix, enhanced, crypto) {
 
   function encrypt(filePath) {
     return filePath.split('/').map(function(name) {
-      return prefix + crypto.encryptBuffer(name).toString('hex');
+      return name && (prefix + crypto.encryptBuffer(name).toString('hex'));
     }).join('/');
   }
 
@@ -17,9 +17,9 @@ module.exports = function(prefix, enhanced, crypto) {
   function enhancedEncrypt(filePath) {
     var preKey = '';
     return filePath.split('/').map(function(name) {
-      var data =  prefix + crypto.encryptBuffer(name, preKey).toString('hex');
+      var data = prefix + crypto.encryptBuffer(name, preKey).toString('hex');
       preKey += name + '/';
-      return data;
+      return name && data;
     }).join('/');
   }
 
