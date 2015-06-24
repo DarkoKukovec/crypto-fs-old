@@ -5,38 +5,41 @@ var CryptoStream = require('./cryptostream');
 
 module.exports = function(options) {
   var cryptoObj = {
-    getCipher: function(options) {
+    getCipher: function(options, preKey) {
+      var password = options.password + (preKey ? '/' + preKey : '');
       if (options.iv) {
-        return crypto.createCipheriv(options.algorithm, options.password, options.iv);
+        return crypto.createCipheriv(options.algorithm, password, options.iv);
       } else {
-        return crypto.createCipher(options.algorithm, options.password);
-      }
-    },
-    getDecipher: function(options) {
-      if (options.iv) {
-        return crypto.createDecipheriv(options.algorithm, options.password, options.iv);
-      } else {
-        return crypto.createDecipher(options.algorithm, options.password);
+        return crypto.createCipher(options.algorithm, password);
       }
     },
 
-    encryptBuffer: function(data) {
-      var cipher = cryptoObj.getCipher(options);
+    getDecipher: function(options, preKey) {
+      var password = options.password + (preKey ? '/' + preKey : '');
+      if (options.iv) {
+        return crypto.createDecipheriv(options.algorithm, password, options.iv);
+      } else {
+        return crypto.createDecipher(options.algorithm, password);
+      }
+    },
+
+    encryptBuffer: function(data, preKey) {
+      var cipher = cryptoObj.getCipher(options, preKey);
       var crypted = Buffer.concat([cipher.update(data), cipher.final()]);
       return crypted;
     },
 
-    decryptBuffer: function(data) {
-      var decipher = cryptoObj.getDecipher(options);
+    decryptBuffer: function(data, preKey) {
+      var decipher = cryptoObj.getDecipher(options, preKey);
       var dec = Buffer.concat([decipher.update(data), decipher.final()]);
       return dec;
     },
 
-    getDecryptStream: function(encoding, debug) {
+    getDecryptStream: function(encoding, preKey, debug) {
       return new CryptoStream({
         inputEncoding: 'binary',
         outputEncoding: encoding
-      }, cryptoObj.getDecipher(options), debug);
+      }, cryptoObj.getDecipher(options, preKey), debug);
     }
   }
   return cryptoObj;

@@ -26,18 +26,20 @@ function getFiles(dir, files_) {
 var cfs = require('./main')({
   algorithm: 'aes-256-ctr',
   password: '1234',
-  root: './test/dest'
+  root: './test/dest',
+  enhanced: true
 });
 
 var files = getFiles(srcPath);
 
-files.forEach(function(file) {
+files.forEach(function(file, index) {
+  cfs.mkdirSync('' + index);
   var data = fs.readFileSync(srcPath + file);
-  cfs.writeFileSync(file, data);
+  cfs.writeFileSync(index + '/' + file, data);
 });
 
-files.forEach(function(file) {
-  var srcFile = cfs.createReadStream(file);
+files.forEach(function(file, index) {
+  var srcFile = cfs.createReadStream(index + '/' + file);
   var destFile = fs.createWriteStream('./test/finish/' + file);
   srcFile.pipe(destFile);
 });

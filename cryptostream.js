@@ -12,7 +12,7 @@ function CryptoStream(opts, cipher, debug) {
 util.inherits(CryptoStream, Stream);
 
 CryptoStream.prototype.write = function(data) {
-  console.log(data.length, this._debug);
+  // console.log(data.length, this._debug);
   this.emit('data', this._cipher.update(data, this.inputEncoding, this.outputEncoding));
   return true;
 };
