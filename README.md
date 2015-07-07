@@ -72,6 +72,7 @@ This mode can't be used in all cases for the following reasons:
   * When a file is renamed using crypto-fs, it has to be decoded and encoded back which isn't practical for bigger files
   * Renaming of folders isn't currently supported. You should manually create a new folder and move all the files in it.
   * Can't work with IV because of key length requirements
+  * File size is not exact. In roder to get the exact file size, the file needs to be decoded. Right now, if you need the exact file size, you'll need to read the file and check its size.
 
 ## Known issues
 
