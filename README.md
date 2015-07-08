@@ -28,6 +28,7 @@ Paths are always relative to the root folder.
 * Hidden
   * File content
   * Filename (but the filename lenght can be estimated)
+  * If enhanced mode is used, two original files starting with the same bytes won't have the same starting bytes when encrypted. That means that if the file type of one file is known (e.g. jpeg), and the second file is of the same file type, it can't be shown from the encoded files.
 * Not hidden
   * File size (but can be different by a few bytes, depending on the file and used algorithm)
   * Folder structure (except for the file and folder names)
